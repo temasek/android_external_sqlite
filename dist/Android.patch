@@ -1,6 +1,6 @@
 diff -r -u -d orig/shell.c ./shell.c
---- orig/shell.c	2014-09-09 10:51:34.413220429 +0900
-+++ ./shell.c	2014-09-09 10:51:34.436220428 +0900
+--- orig/shell.c	2014-10-11 12:59:14.871761525 +0900
++++ ./shell.c	2014-11-12 00:27:12.914180938 +0900
 @@ -35,6 +35,11 @@
  #include "sqlite3.h"
  #include <ctype.h>
@@ -13,10 +13,11 @@ diff -r -u -d orig/shell.c ./shell.c
  
  #if !defined(_WIN32) && !defined(WIN32)
  # include <signal.h>
-@@ -1126,6 +1131,20 @@
-     sqlite3_status(SQLITE_STATUS_PARSER_STACK, &iCur, &iHiwtr, bReset);
-     fprintf(pArg->out, "Deepest Parser Stack:                %d (max %d)\n", iCur, iHiwtr);
- #endif
+@@ -1737,6 +1742,21 @@
+                             readfileFunc, 0, 0);
+     sqlite3_create_function(db, "writefile", 2, SQLITE_UTF8, 0,
+                             writefileFunc, 0, 0);
++
 +    // Begin Android Add
 +    #ifndef NO_ANDROID_FUNCS
 +        int err = register_localized_collators(db, "en_US", 0);
@@ -32,11 +33,11 @@ diff -r -u -d orig/shell.c ./shell.c
 +    #endif
 +    // End Android Add
    }
+ }
  
-   if( pArg && pArg->out && db ){
 diff -r -u -d orig/sqlite3.c ./sqlite3.c
---- orig/sqlite3.c	2014-09-09 10:51:34.434220428 +0900
-+++ ./sqlite3.c	2014-09-09 10:51:34.456220427 +0900
+--- orig/sqlite3.c	2014-10-11 12:59:14.904761523 +0900
++++ ./sqlite3.c	2014-11-12 00:35:29.994166222 +0900
 @@ -25,6 +25,13 @@
  #ifndef SQLITE_API
  # define SQLITE_API
