@@ -1,6 +1,6 @@
 diff -r -u -d orig/shell.c ./shell.c
---- orig/shell.c	2015-01-21 02:24:06.000000000 +0900
-+++ ./shell.c	2015-01-22 00:07:23.880533759 +0900
+--- orig/shell.c	2015-02-25 23:36:12.000000000 +0900
++++ ./shell.c	2015-03-13 17:43:55.717548727 +0900
 @@ -45,6 +45,11 @@
  #endif
  #include <ctype.h>
@@ -13,7 +13,7 @@ diff -r -u -d orig/shell.c ./shell.c
  
  #if !defined(_WIN32) && !defined(WIN32)
  # include <signal.h>
-@@ -1869,6 +1874,21 @@
+@@ -1889,6 +1894,21 @@
                              readfileFunc, 0, 0);
      sqlite3_create_function(db, "writefile", 2, SQLITE_UTF8, 0,
                              writefileFunc, 0, 0);
@@ -36,8 +36,8 @@ diff -r -u -d orig/shell.c ./shell.c
  }
  
 diff -r -u -d orig/sqlite3.c ./sqlite3.c
---- orig/sqlite3.c	2015-01-21 02:24:06.000000000 +0900
-+++ ./sqlite3.c	2015-01-22 00:23:50.815577278 +0900
+--- orig/sqlite3.c	2015-02-25 23:36:12.000000000 +0900
++++ ./sqlite3.c	2015-03-13 17:43:55.741548727 +0900
 @@ -16822,7 +16822,7 @@
  ** The malloc.h header file is needed for malloc_usable_size() function
  ** on some systems (e.g. Linux).
@@ -127,7 +127,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
      }
    }else if( flags & SQLITE_OPEN_DELETEONCLOSE ){
      *pMode = 0600;
-@@ -104701,7 +104721,7 @@
+@@ -104704,7 +104724,7 @@
    }
    if( pDb->pSchema->file_format>SQLITE_MAX_FILE_FORMAT ){
      sqlite3SetString(pzErrMsg, db, "unsupported file format");
@@ -136,7 +136,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
      goto initone_error_out;
    }
  
-@@ -129224,9 +129244,9 @@
+@@ -129233,9 +129253,9 @@
  #endif
  
  #ifdef SQLITE_ENABLE_FTS3
@@ -149,7 +149,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
  #endif
  
  #ifdef SQLITE_ENABLE_ICU
-@@ -135141,16 +135161,28 @@
+@@ -135155,16 +135175,28 @@
    ** module with sqlite.
    */
    if( SQLITE_OK==rc 
