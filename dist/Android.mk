@@ -27,7 +27,14 @@ common_sqlite_flags := \
 	-DSQLITE_OMIT_BUILTIN_TEST \
 	-DSQLITE_OMIT_COMPILEOPTION_DIAGS \
 	-DSQLITE_OMIT_LOAD_EXTENSION \
-	-DSQLITE_DEFAULT_FILE_PERMISSIONS=0600
+	-DSQLITE_DEFAULT_FILE_PERMISSIONS=0600 \
+	-Dfdatasync=fdatasync
+
+ifeq ($(call is-vendor-board-platform,QCOM),true)
+ifeq ($(TARGET_HAVE_QC_PERF),true)
+android_common_sqlite_flags += -DQC_PERF
+endif
+endif
 
 device_sqlite_flags := $(common_sqlite_flags) \
     -DSQLITE_ENABLE_ICU \
@@ -45,7 +52,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(common_src_files)
 
-LOCAL_CFLAGS += $(device_sqlite_flags)
+LOCAL_CFLAGS += $(android_common_sqlite_flags) $(device_sqlite_flags)
 
 LOCAL_SHARED_LIBRARIES := libdl
 
@@ -64,6 +71,11 @@ LOCAL_SHARED_LIBRARIES += liblog \
 
 # include android specific methods
 LOCAL_WHOLE_STATIC_LIBRARIES := libsqlite3_android
+
+ifeq ($(TARGET_HAVE_QC_PERF),true)
+LOCAL_WHOLE_STATIC_LIBRARIES += libqc-sqlite
+LOCAL_SHARED_LIBRARIES += libcutils
+endif
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -102,7 +114,7 @@ LOCAL_SHARED_LIBRARIES := libsqlite \
             libicui18n \
             libutils
 
-LOCAL_CFLAGS += $(device_sqlite_flags)
+LOCAL_CFLAGS += $(android_common_sqlite_flags) $(device_sqlite_flags)
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 
